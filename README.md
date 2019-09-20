@@ -298,7 +298,7 @@ geodist locations Vehicle1 Vehicle4 km
 
 Wyszukanie pozycji w określonym promieniu
 ~~~
-georadius locations 0 0 22000 km
+georadius locations 0 0 200 km
 ~~~
 
 ### Czyszczenie 
@@ -342,6 +342,38 @@ Utworzenie subskrypcji ze wzorcem
 psubscribe sensors.temp*
 ~~~
 
+## NET Core
+
+### Przydatne komendy CLI
+- ``` dotnet --list-sdks ``` - wyświetlenie listy zainstalowanych SDK
+- ``` dotnet --list-runtimes ``` - wyświetlenie listy zainstalowanych środowisk uruchomieniowych
+- ``` dotnet new globaljson ``` - utworzenie pliku global.json
+- ``` dotnet new globaljson --sdk-version {version} ``` - utworzenie pliku global.json i ustawienie wersji SDK
+- ``` dotnet new gitignore ``` - utworzenie pliku gitignore
+- ``` dotnet new sln ``` - utworzenie nowego rozwiązania
+- ``` dotnet sln {solution.sln} add {project.csproj}``` - dodanie projektu do rozwiązania
+- ``` dotnet sln {solution.sln} remove {project.csproj}``` - usunięcie projektu z rozwiązania
+- ``` dotnet new {template} ``` - utworzenie nowego projektu na podstawie wybranego szablonu
+- ``` dotnet new {template} -o {output} ``` - utworzenie nowego projektu w podanym katalogu
+- ``` dotnet add {project.csproj} reference {library.csproj} ``` - dodanie odwołania do biblioteki
+- ``` dotnet remove {project.csproj} reference {library.csproj} ``` - usunięcie odwołania do biblioteki
+
+- ``` dotnet restore ``` - pobranie bibliotek nuget na podstawie pliku projektu
+- ``` dotnet build ``` - kompilacja projektu
+
+- ``` dotnet run ``` - uruchomienie projektu
+- ``` dotnet run {app.dll}``` - uruchomienie aplikacji
+- ``` dotnet test ``` - uruchomienie testów jednostkowych
+- 
+- ``` dotnet run watch``` - uruchomienie projektu w trybie śledzenia zmian
+- ``` dotnet test watch``` - uruchomienie testów jednostkowych w trybie śledzenia zmian
+
+- ``` dotnet publish -c Release -r {platform}``` - publikacja aplikacji
+- ``` dotnet publish -c Release -r win10-x64``` - publikacja aplikacji dla Windows
+- ``` dotnet publish -c Release -r linux-x64``` - publikacja aplikacji dla Linux
+- ``` dotnet publish -c Release -r osx-x64``` - publikacja aplikacji dla MacOS
+
+
 ## .NET Core i Redis
 
 ### Instalacja biblioteki
@@ -355,4 +387,34 @@ dotnet add package StackExchange.Redis
 ~~~ csharp
  ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
  IDatabase db = redis.GetDatabase();
+~~~
+
+
+### Wstrzykiwanie zalezności
+
+- Rejestracja
+  
+~~~ csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    // dotnet add package StackExchange.Redis
+    services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("localhost"));
+}
+~~~
+
+- Uzycie
+
+~~~ csharp
+ public class DbLocationRepository : ILocationRepository
+{
+    private readonly IConnectionMultiplexer connection;
+    private readonly IDatabase db;
+    private const string key = "locations";
+
+    public RedisDbLocationRepository(IConnectionMultiplexer connection)
+    {
+        this.connection = connection;
+        this.db = connection.GetDatabase();
+    }
+}
 ~~~
