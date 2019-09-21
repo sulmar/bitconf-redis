@@ -163,6 +163,10 @@ Pobranie wszystich pól
 HGETALL users:marcin
 ~~~
 
+Ustawienie czasu życia
+~~~
+EXPIRE users:Marcin
+~~~
  
 
 ### Listy
