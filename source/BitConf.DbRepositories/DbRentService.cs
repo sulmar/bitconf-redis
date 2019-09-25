@@ -15,6 +15,12 @@ namespace BitConf.DbRepositories
         private const string rentedOutKey = "rented-out";
         private const string rentCounterKey = "rent-counter";
 
+        public DbRentService(IConnectionMultiplexer connection)
+        {
+            this.connection = connection;
+            this.db = connection.GetDatabase();
+        }
+
         public bool CanRent(string vehicleId)
         {
             return db.SetContains(toRentkey, vehicleId);
