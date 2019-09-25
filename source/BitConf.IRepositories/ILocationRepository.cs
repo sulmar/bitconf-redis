@@ -11,14 +11,4 @@ namespace BitConf.IRepositories
         Location Get(string vehicleId);
         IEnumerable<LocationInfo> Get(Location location, double distance = 1000);
     }
-
-    public interface IVehicleService
-    {
-        void Add(Vehicle vehicle);
-        Vehicle Get(string vehicleId);
-        void Rent(string vehicleId);
-        void Return(string vehicleId);
-        bool CanRest(string vehicleId);
-        bool CanReturn(string vehicleId);
-    }
 }

@@ -31,6 +31,8 @@ namespace BitConf.Api
             services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("localhost"));
 
             services.AddScoped<ILocationService, DbLocationService>();
+            services.AddScoped<IVehicleService, DbVehicleService>();
+            services.AddScoped<IRentService, DbRentService>();
             
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

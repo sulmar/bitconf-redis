@@ -8,6 +8,7 @@ using StackExchange.Redis;
 
 namespace BitConf.DbRepositories
 {
+
     // dotnet add package StackExchange.Redis
     public class DbLocationService : ILocationService
     {

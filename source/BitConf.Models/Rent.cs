@@ -4,7 +4,10 @@ using System.Text;
 
 namespace BitConf.Models
 {
-    class Rent
+    public class Rent : Base
     {
+        public int Id { get; set; }
+        public string VehicleId { get; set; }
+        public string UserId { get; set; }
     }
 }
