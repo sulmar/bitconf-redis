@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 namespace BitConf.Api.Controllers
 {
-
-
     // extension to vs code: restclient
 
     /* locations.http
@@ -24,14 +22,6 @@ namespace BitConf.Api.Controllers
         }
      
      */
-
-
-
-
-
-
-
-
 
     [Route("api/{controller}")]
     [ApiController]
@@ -65,7 +55,7 @@ namespace BitConf.Api.Controllers
 
          /* locations.http
      
-       GET http://localhost:5000/api/locations?lat=23.44&lng=58.43 HTTP/1.1
+       GET http://localhost:5000/api/locations?lat=23.44&lng=58.43&distance=2000 HTTP/1.1
 
     */
 

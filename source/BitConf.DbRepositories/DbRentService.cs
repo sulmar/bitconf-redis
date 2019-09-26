@@ -8,7 +8,6 @@ namespace BitConf.DbRepositories
 {
     public class DbRentService : IRentService
     {
-        private readonly IConnectionMultiplexer connection;
         private readonly IDatabase db;
 
         private const string toRentkey = "to-rent";
@@ -17,7 +16,6 @@ namespace BitConf.DbRepositories
 
         public DbRentService(IConnectionMultiplexer connection)
         {
-            this.connection = connection;
             this.db = connection.GetDatabase();
         }
 
@@ -33,7 +31,7 @@ namespace BitConf.DbRepositories
 
         public void Rent(Rent rent)
         {
-            db.StringIncrement(rentCounterKey);
+            rent.Id = (int) db.StringIncrement(rentCounterKey);
 
             db.SetMove(toRentkey, rentedOutKey, rent.VehicleId);
         }
@@ -47,9 +45,37 @@ namespace BitConf.DbRepositories
         {
             RedisValue[] values = db.SetMembers(key);
 
-            var vehicles = values.Select(v => new Vehicle { Id = v });
+            var vehicles = values.Select(v => Map(v));
 
             return vehicles;
+        }
+
+        private static Vehicle Map(RedisValue value)
+        {
+            return new Vehicle { Id = value };
+        }
+
+        public IEnumerable<Vehicle> Get()
+        {
+            var values = db.SetCombine(SetOperation.Union, toRentkey, rentedOutKey);
+
+            var vehicles = values.Select(v => Map(v));
+
+            return vehicles;
+        }
+
+        public IEnumerable<Vehicle> GetToRent() => Get(toRentkey);
+
+        public IEnumerable<Vehicle> GetRentedOut() => Get(rentedOutKey);
+
+        public Rent Get(int id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int GetCount()
+        {
+           return (int)db.StringGet(rentCounterKey);
         }
     }
 }

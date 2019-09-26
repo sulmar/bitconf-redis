@@ -12,14 +12,12 @@ namespace BitConf.DbRepositories
     // dotnet add package StackExchange.Redis
     public class DbLocationService : ILocationService
     {
-        private readonly IConnectionMultiplexer connection;
         private readonly IDatabase db;
 
         private const string locationsKey = "locations";
 
         public DbLocationService(IConnectionMultiplexer connection)
         {
-            this.connection = connection;
             this.db = connection.GetDatabase();
         }
 
@@ -31,6 +29,7 @@ namespace BitConf.DbRepositories
 
         public Location Get(string vehicleId)
         {
+            // GEOPOS key member
             var position = db.GeoPosition(locationsKey, vehicleId);
 
             if (position == null)
@@ -43,7 +42,7 @@ namespace BitConf.DbRepositories
 
         public IEnumerable<LocationInfo> Get(Location location, double distance)
         {
-            // GEORADIUS 
+            // GEORADIUS  key 
             var geoResults = db.GeoRadius(locationsKey, location.Longitude, location.Latitude, distance, GeoUnit.Kilometers, -1, Order.Ascending, GeoRadiusOptions.WithCoordinates | GeoRadiusOptions.WithDistance);
 
             var results = geoResults.Select(g => Map(g));
@@ -52,15 +51,11 @@ namespace BitConf.DbRepositories
 
         }
 
-        private static Location Map(GeoPosition position)
+        private static Location Map(GeoPosition position) => new Location
         {
-            return new Location
-            {
-                Latitude = position.Latitude,
-                Longitude = position.Longitude
-            };
-
-        }
+            Latitude = position.Latitude,
+            Longitude = position.Longitude
+        };
 
         private static LocationInfo Map(GeoRadiusResult g) => new LocationInfo
         {

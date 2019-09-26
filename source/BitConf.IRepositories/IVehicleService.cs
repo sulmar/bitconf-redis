@@ -1,4 +1,5 @@
 ﻿using BitConf.Models;
+using System.Collections.Generic;
 
 namespace BitConf.IRepositories
 {
@@ -6,6 +7,7 @@ namespace BitConf.IRepositories
     {
         void Add(Vehicle vehicle);
         Vehicle Get(string vehicleId);
-   
+        void Remove(string vehicleId);
+
     }
 }
