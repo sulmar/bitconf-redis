@@ -121,6 +121,34 @@ keys *
  decrby points 10
  ~~~
  
+### Operacje bitowe
+
+Ustawienie bitu
+~~~
+setbit article1:today 50 1
+setbit article2:today 50 1
+setbit article2:today 50 1
+~~~
+
+Pobranie bitu
+~~~
+getbit article1:today 50
+~~~
+
+Operacja AND
+~~~
+bitop and 50:readboth article1:today article2:today
+~~~
+
+Operacja OR
+~~~
+bitop or 50:readanyarticle article1:today article2:today
+~~~
+
+Obliczenie ilości ustawionych bitów na 1
+~~~
+bitcount result
+~~~
 
 ### Baza danych
 
